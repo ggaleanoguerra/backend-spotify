@@ -2,6 +2,7 @@ const { Router } = require("express");
 const axios = require("axios");
 const qs = require("qs");
 const router = Router();
+const express = require("express");
 
 require("dotenv").config(); // Carga las variables de entorno desde el archivo .env
 
