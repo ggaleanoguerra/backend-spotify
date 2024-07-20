@@ -4,7 +4,7 @@ const qs = require("qs");
 const router = Router();
 const express = require("express");
 
-require("dotenv").config(); // Carga las variables de entorno desde el archivo .env
+require("dotenv").config(); 
 
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
