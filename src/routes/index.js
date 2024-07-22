@@ -4,7 +4,7 @@ const qs = require("qs");
 const router = Router();
 const express = require("express");
 
-require("dotenv").config(); 
+require("dotenv").config();
 
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
@@ -75,6 +75,22 @@ router.post("/auth/callback", async (req, res) => {
       error: "Failed to exchange code for token",
       details: error.response ? error.response.data : error.message,
     });
+  }
+});
+
+router.get("/profile", async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+
+  try {
+    const profileResponse = await axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    res.json(profileResponse.data);
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ error: "Failed to fetch user profile" });
   }
 });
 
