@@ -45,7 +45,6 @@ router.get("/auth/token", async (req, res) => {
 
 router.post("/auth/callback", async (req, res) => {
   const code = req.body.code;
-
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const authOptions = {
     method: "POST",
@@ -58,7 +57,7 @@ router.post("/auth/callback", async (req, res) => {
     data: qs.stringify({
       grant_type: "authorization_code",
       code: code,
-      redirect_uri: redirectUri,
+      redirect_uri: process.env.REDIRECT_URI,
     }),
     url: tokenUrl,
   };
@@ -104,5 +103,6 @@ router.get("/profile", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
