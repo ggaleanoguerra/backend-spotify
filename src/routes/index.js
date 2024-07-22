@@ -10,7 +10,7 @@ const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const redirectUri = process.env.REDIRECT_URI;
 
-router.use(express.json()); // Middleware para manejar JSON
+router.use(express.json());
 
 router.get("/auth/token", async (req, res) => {
   const tokenUrl = "https://accounts.spotify.com/api/token";
@@ -79,18 +79,29 @@ router.post("/auth/callback", async (req, res) => {
 });
 
 router.get("/profile", async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.headers.authorization.split(' ')[1];
+
+  const profileUrl = "https://api.spotify.com/v1/me";
+  const profileOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    url: profileUrl,
+  };
 
   try {
-    const profileResponse = await axios.get("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    res.json(profileResponse.data);
+    const response = await axios(profileOptions);
+    res.json(response.data);
   } catch (error) {
-    console.error("Error fetching user profile:", error);
-    res.status(500).json({ error: "Failed to fetch user profile" });
+    console.error(
+      "Error fetching profile:",
+      error.response ? error.response.data : error.message
+    );
+    res.status(500).json({
+      error: "Failed to fetch profile",
+      details: error.response ? error.response.data : error.message,
+    });
   }
 });
 
